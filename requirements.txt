@@ -1,0 +1,6 @@
+SQLAlchemy==1.4.5
+PyMySQL==1.0.2
+fire
+pandas==1.1.5
+alembic==1.7.3
+eventlet==0.25.2
