@@ -17,11 +17,11 @@ depends_on = None
 
 
 def upgrade():
+    # op.execute('CREATE SCHEMA if not exists base_cnpj;')
     create_table_empresas()
     create_table_estabelecimentos()
     create_table_socios()
     create_index()
-    create_fk()
 
 
 def downgrade():
@@ -104,19 +104,6 @@ def create_table_socios():
         sa.Column('updated_at', sa.DateTime()),        
         sa.PrimaryKeyConstraint('id'),
     )
-
-def create_fk():
-    op.create_foreign_key("fk_cnpj_basico_empresa_estabelecimento", "empresa", "estabelecimento",
-                          ["cnpj_basico"], ["cnpj_basico"])
-    
-    op.create_foreign_key("fk_cnpj_basico_estabelecimento_empresa", "estabelecimento", "empresa",
-                        ["cnpj_basico"], ["cnpj_basico"])
-    
-    op.create_foreign_key("fk_cnpj_basico_empresa_socio", "empresa", "socio",
-                        ["cnpj_basico"], ["cnpj_basico"])
-
-    op.create_foreign_key("fk_cnpj_basico_socio_empresa", "socio", "empresa",
-                    ["cnpj_basico"], ["cnpj_basico"])
     
 
 def create_index():
