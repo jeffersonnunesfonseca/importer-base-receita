@@ -10,6 +10,12 @@ pip install -r requirements.txt
 ``` 
 
 # Config
+
+- criar arquivo `alembic.ini`
+```
+mv alembic.ini.example alembic.ini
+
+```
 - Seta string de conexão no alembic.ini e exportar como variavel de ambiente
 ```
 alembic.ini:38 = sqlalchemy.url = mysql+pymysql://teste:teste@localhost/base_cnpj
