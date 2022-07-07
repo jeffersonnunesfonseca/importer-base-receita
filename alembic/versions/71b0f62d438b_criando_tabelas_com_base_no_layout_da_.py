@@ -40,7 +40,7 @@ def create_table_empresas():
         sa.Column('capital_social', sa.DECIMAL(10,2)),
         sa.Column('porte_empresa', sa.Integer()), # A CÓDIGO DO PORTE DA EMPRESA: 00 – NÃO INFORMADO 01 - MICRO EMPRESA 03 - EMPRESA D
         sa.Column('ente_federativo_responsavel', sa.String(length=300)),
-        sa.Column('created_at', sa.Date()),
+        sa.Column('created_at', sa.DateTime(), nullable=False),
         sa.Column('updated_at', sa.DateTime()),        
         sa.PrimaryKeyConstraint('id'),
     )
@@ -52,15 +52,14 @@ def create_table_estabelecimentos():
         sa.Column('cnpj_basico', sa.Integer()),
         sa.Column('cnpj_ordem', sa.Integer()),
         sa.Column('cnpj_dv', sa.Integer()),
-        sa.Column('qualificacao_responsavel', sa.String(length=300)),
         sa.Column('identificador_matriz_filial', sa.Integer()), #CÓDIGO DO IDENTIFICADOR MATRIZ/FILIAL: 1 – MATRIZ 2 – FILIAL
         sa.Column('nome_fantasia', sa.String(length=300)),
         sa.Column('situacao_cadastral', sa.Integer()), # CÓDIGO DA SITUAÇÃO CADASTRAL: 01 – NULA 2 – ATIVA 3 – SUSPENSA 4 – INAPTA 08 – BAIXADA
-        sa.Column('data_situacao_cadastral', sa.DateTime()),
+        sa.Column('data_situacao_cadastral', sa.Date()),
         sa.Column('motivo_situacao_cadastral', sa.String(length=300)),
         sa.Column('nome_cidade_exterior', sa.String(length=300)),
         sa.Column('pais', sa.String(length=300)),
-        sa.Column('data_inicio_atividade', sa.DateTime()),
+        sa.Column('data_inicio_atividade', sa.Date()),
         sa.Column('cnae_principal', sa.String(length=300)),
         sa.Column('cnae_secundario', sa.String(length=300)),
         sa.Column('tipo_logradouro', sa.String(length=300)),
@@ -79,8 +78,8 @@ def create_table_estabelecimentos():
         sa.Column('fax', sa.String(length=300)),
         sa.Column('correio_eletronico', sa.String(length=300)),
         sa.Column('situacao_especial', sa.String(length=300)),
-        sa.Column('data_situacao_especial', sa.DateTime()),
-        sa.Column('created_at', sa.Date()),
+        sa.Column('data_situacao_especial', sa.Date()),
+        sa.Column('created_at', sa.DateTime(), nullable=False),
         sa.Column('updated_at', sa.DateTime()),        
         sa.PrimaryKeyConstraint('id'),
     )
@@ -94,13 +93,13 @@ def create_table_socios():
         sa.Column('nome', sa.String(length=300)),
         sa.Column('cpf_cnpj', sa.String(length=300)),
         sa.Column('qualificacao_socio', sa.String(length=300)),
-        sa.Column('data_entrada_sociedade', sa.DateTime()),
+        sa.Column('data_entrada_sociedade', sa.Date()),
         sa.Column('pais', sa.String(length=300)),
         sa.Column('representante_legal', sa.String(length=300)),
         sa.Column('nome_representante', sa.String(length=300)),
         sa.Column('qualificacao_representante', sa.String(length=300)),
         sa.Column('faixa_etaria', sa.String(length=300)),
-        sa.Column('created_at', sa.Date()),
+        sa.Column('created_at', sa.DateTime(), nullable=False),
         sa.Column('updated_at', sa.DateTime()),        
         sa.PrimaryKeyConstraint('id'),
     )
@@ -113,3 +112,11 @@ def create_index():
         
         op.execute('CREATE INDEX idx_natureza_juridica on empresa (natureza_juridica)')
         op.execute('CREATE INDEX idx_faixa_etaria on socio (faixa_etaria)')
+        
+        op.execute('CREATE INDEX idx_uf on estabelecimento (uf)')
+        op.execute('CREATE INDEX idx_cnae_principal on estabelecimento (cnae_principal)')
+        op.execute('CREATE INDEX idx_ddd_1 on estabelecimento (ddd_1)')
+        op.execute('CREATE INDEX idx_ddd_2 on estabelecimento (ddd_2)')
+        op.execute('CREATE INDEX idx_municipio on estabelecimento (municipio)')
+        op.execute('CREATE INDEX idx_situacao_cadastral on estabelecimento (situacao_cadastral)')
+
