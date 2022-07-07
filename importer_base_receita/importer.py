@@ -1,5 +1,5 @@
 import os
-import eventlet
+# import eventlet
 import pandas as pd
 from importer_base_receita.base import FileProcessor
 from importer_base_receita import db_engine
@@ -16,20 +16,20 @@ class ProcessFile(FileProcessor):
             "estabelecimento",
             "socio"
         ]
-        self.query_pool = eventlet.GreenPool(100) # executa X queries paralelas
+        # self.query_pool = eventlet.GreenPool(100) # executa X queries paralelas
 
-    def execute(self):
-        print("Preparando arquivos ...")
-        self.prepare_files()
+    # def execute(self):
+    #     print("Preparando arquivos ...")
+    #     self.prepare_files()
         
-        print("Iniciando processamento em massa")       
+    #     print("Iniciando processamento em massa")       
         
-        for type in self._types:
-            print(f"spawmando {type}")     
-            self.query_pool.spawn(self._spawn, type)
+    #     for type in self._types:
+    #         print(f"spawmando {type}")     
+    #         self.query_pool.spawn(self._spawn, type)
 
-        # total_empresas = self.process_empresa()
-        self.query_pool.waitall()
+    #     # total_empresas = self.process_empresa()
+    #     self.query_pool.waitall()
 
     
     def _spawn(self, type):
@@ -106,8 +106,8 @@ class ProcessFile(FileProcessor):
                     next_df = next(csv)
                 except StopIteration:
                     next_df = None
-    
-                df['data_entrada_sociedade'] = pd.to_datetime(df.data_entrada_sociedade, format='%Y%m%d')
+
+                df['data_entrada_sociedade'] = pd.to_datetime(df.data_entrada_sociedade, format='%Y%m%d', errors = 'coerce')
                 df.to_sql('socio', con=db_engine, if_exists='append', index=False, chunksize=self.CHUNK_SIZE, index_label='id', method='multi')
                 processed_items += (len(df))
                 print(f"Qtd socios processados até o momento do arquivo {cont_file}: {processed_items}")
@@ -178,8 +178,8 @@ class ProcessFile(FileProcessor):
                 except StopIteration:
                     next_df = None
 
-                df['data_situacao_cadastral'] = pd.to_datetime(df.data_situacao_cadastral, format='%Y%m%d')
-                df['data_situacao_especial'] = pd.to_datetime(df.data_situacao_especial, format='%Y%m%d')
+                df['data_situacao_cadastral'] = pd.to_datetime(df.data_situacao_cadastral, format='%Y%m%d', errors = 'coerce')
+                df['data_situacao_especial'] = pd.to_datetime(df.data_situacao_especial, format='%Y%m%d', errors = 'coerce')
                 df.to_sql('estabelecimento', con=db_engine, if_exists='append', index=False, chunksize=self.CHUNK_SIZE, index_label='id', method='multi')
                 processed_items += (len(df))
                 print(f"Qtd estabelecimentos processados até o momento do arquivo {cont_file}: {processed_items}")
