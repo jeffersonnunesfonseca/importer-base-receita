@@ -67,7 +67,7 @@ class ProcessFile(FileProcessor):
                     next_df = next(csv)
                 except StopIteration:
                     next_df = None
-   
+
                 df.to_sql('empresa', con=db_engine, if_exists='append', index=False, chunksize=self.CHUNK_SIZE, index_label='id', method='multi')
                 processed_items += (len(df))
                 print(f"Qtd empresas processadas até o momento do arquivo {cont_file}: {processed_items}")
@@ -106,7 +106,8 @@ class ProcessFile(FileProcessor):
                     next_df = next(csv)
                 except StopIteration:
                     next_df = None
-   
+    
+                df['data_entrada_sociedade'] = pd.to_datetime(df.data_entrada_sociedade, format='%Y%m%d')
                 df.to_sql('socio', con=db_engine, if_exists='append', index=False, chunksize=self.CHUNK_SIZE, index_label='id', method='multi')
                 processed_items += (len(df))
                 print(f"Qtd socios processados até o momento do arquivo {cont_file}: {processed_items}")
@@ -122,11 +123,10 @@ class ProcessFile(FileProcessor):
         files = os.listdir(f"{self._workspace}estabelecimento/")
         total_files = len(files)
         cont_file = 1
-        cols =[
+        cols = [
             'cnpj_basico',
             'cnpj_ordem',
             'cnpj_dv',
-            'qualificacao_responsavel',
             'identificador_matriz_filial',
             'nome_fantasia',
             'situacao_cadastral',
@@ -153,8 +153,8 @@ class ProcessFile(FileProcessor):
             'fax',
             'correio_eletronico',
             'situacao_especial',
-            'data_situacao_especial'
-        ]
+            'data_situacao_especial']
+        
         for file in files:
             print(f"Total de arquivos = {total_files}, arquivo atual [{cont_file}] - {file}")
             file = f"{self._workspace}estabelecimento/{file}"            
@@ -177,7 +177,9 @@ class ProcessFile(FileProcessor):
                     next_df = next(csv)
                 except StopIteration:
                     next_df = None
-   
+
+                df['data_situacao_cadastral'] = pd.to_datetime(df.data_situacao_cadastral, format='%Y%m%d')
+                df['data_situacao_especial'] = pd.to_datetime(df.data_situacao_especial, format='%Y%m%d')
                 df.to_sql('estabelecimento', con=db_engine, if_exists='append', index=False, chunksize=self.CHUNK_SIZE, index_label='id', method='multi')
                 processed_items += (len(df))
                 print(f"Qtd estabelecimentos processados até o momento do arquivo {cont_file}: {processed_items}")
